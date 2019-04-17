@@ -46,16 +46,12 @@ public class Main {
 
         try (QueueSubscription queueSubscription = new QueueSubscription(sqs, sns, config.receiver.snsTopicArn)) {
             Receiver receiver = new Receiver(sqs, queueSubscription.getQueueUrl());
-
-
             LOG.info("{}", locationData);
-//            locationData.forEach(locationData1 -> {
-//                System.out.println(locationData1.getId() + " " + locationData1.getX() + " " + locationData1.getY());
-//            });
 
-
-            receiver.getMessages();
-            LOG.info(String.valueOf(receiver.getMessages()));
+            for (int i = 0; i < 10; i++) {
+                List<Event> events = receiver.getEvents();
+                LOG.info("{}", events);
+            }
 
         }
     }

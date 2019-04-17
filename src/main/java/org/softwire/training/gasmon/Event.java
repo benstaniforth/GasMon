@@ -2,14 +2,14 @@ package org.softwire.training.gasmon;
 
 import com.google.common.base.MoreObjects;
 
-public class Message {
+public class Event {
 
     private String locationId;
     private String eventId;
-    private Double value;
-    private Long timestamp;
+    private double value;
+    private long timestamp;
 
-    public Message(String locationId, String eventId, Double value, Long timestamp) {
+    public Event(String locationId, String eventId, double value, long timestamp) {
         this.locationId = locationId;
         this.eventId = eventId;
         this.value = value;
@@ -24,11 +24,11 @@ public class Message {
         return eventId;
     }
 
-    public Double getValue() {
+    public double getValue() {
         return value;
     }
 
-    public Long getTimestamp() {
+    public long getTimestamp() {
         return timestamp;
     }
 
