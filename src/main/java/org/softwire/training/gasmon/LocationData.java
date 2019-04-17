@@ -5,10 +5,10 @@ import com.google.common.base.MoreObjects;
 public class LocationData {
 
     private String id;
-    private Double x;
-    private Double y;
+    private double x;
+    private double y;
 
-    public LocationData(String id, Double x, Double y) {
+    public LocationData(String id, double x, double y) {
         this.id = id;
         this.x = x;
         this.y = y;
@@ -18,11 +18,11 @@ public class LocationData {
         return id;
     }
 
-    public Double getX() {
+    public double getX() {
         return x;
     }
 
-    public Double getY() {
+    public double getY() {
         return y;
     }
 
