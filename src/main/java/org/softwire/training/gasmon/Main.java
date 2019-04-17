@@ -44,9 +44,8 @@ public class Main {
         S3Repository repository = new S3Repository(s3, config.locations.s3Bucket);
 
         LocationsService locationsService = new LocationsService(repository, config.locations.s3Key);
-        List<LocationData> locationData;
 
-        locationData = ReadJSONFile.getLocationDataFromJSON(repository, config);
+        List<LocationData> locationData = locationsService.getValidLocations();
 
         try (QueueSubscription queueSubscription = new QueueSubscription(sqs, sns, config.receiver.snsTopicArn)) {
             Receiver receiver = new Receiver(sqs, queueSubscription.getQueueUrl());
@@ -54,9 +53,14 @@ public class Main {
 
             for (int i = 0; i < 10; i++) {
                 List<Event> events = receiver.getEvents();
-                LOG.info("{}", events);
+                for (Event event : events) {
+                    if (locationsService.isValidLocation(event.getLocationId())) {
+                        LOG.info("{}", event);
+                    } else {
+                        LOG.info("Skipped event. Unknown location");
+                    }
+                }
             }
-
         }
     }
 }
