@@ -7,12 +7,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.softwire.training.gasmon.aws.AwsClientFactory;
 import org.softwire.training.gasmon.config.Config;
+import org.softwire.training.gasmon.model.Event;
+import org.softwire.training.gasmon.model.LocationData;
 import org.softwire.training.gasmon.receiver.QueueSubscription;
 import org.softwire.training.gasmon.receiver.Receiver;
 import org.softwire.training.gasmon.repository.S3Repository;
+import org.softwire.training.gasmon.services.ReadJSONFile;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 
 public class Main {

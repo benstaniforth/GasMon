@@ -12,10 +12,8 @@ import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.softwire.training.gasmon.Event;
+import org.softwire.training.gasmon.model.Event;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;

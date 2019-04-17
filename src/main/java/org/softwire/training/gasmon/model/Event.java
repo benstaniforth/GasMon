@@ -1,4 +1,4 @@
-package org.softwire.training.gasmon;
+package org.softwire.training.gasmon.model;
 
 import com.google.common.base.MoreObjects;
 

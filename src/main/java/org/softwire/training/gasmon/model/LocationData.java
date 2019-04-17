@@ -1,4 +1,4 @@
-package org.softwire.training.gasmon;
+package org.softwire.training.gasmon.model;
 
 import com.google.common.base.MoreObjects;
 
@@ -7,6 +7,7 @@ public class LocationData {
     private String id;
     private double x;
     private double y;
+
 
     public LocationData(String id, double x, double y) {
         this.id = id;
@@ -33,4 +34,6 @@ public class LocationData {
                 .add("y", y)
                 .toString();
     }
+
+
 }

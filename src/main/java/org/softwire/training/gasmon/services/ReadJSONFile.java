@@ -1,7 +1,8 @@
-package org.softwire.training.gasmon;
+package org.softwire.training.gasmon.services;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.softwire.training.gasmon.model.LocationData;
 import org.softwire.training.gasmon.config.Config;
 import org.softwire.training.gasmon.repository.S3Repository;
 
