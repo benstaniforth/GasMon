@@ -11,6 +11,10 @@ import org.softwire.training.gasmon.receiver.QueueSubscription;
 import org.softwire.training.gasmon.receiver.Receiver;
 import org.softwire.training.gasmon.repository.S3Repository;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Main {
 
     private static final Logger LOG = LoggerFactory.getLogger(Main.class);
@@ -24,7 +28,7 @@ public class Main {
         }
     }
 
-    private static void run() {
+    private static void run() throws IOException {
         LOG.info("Starting to run...");
 
         Config config = new Config();
@@ -36,12 +40,23 @@ public class Main {
 
         S3Repository repository = new S3Repository(s3, config.locations.s3Bucket);
 
+        List<LocationData> locationData;
+
+        locationData = ReadJSONFile.getLocationDataFromJSON(repository, config);
+
         try (QueueSubscription queueSubscription = new QueueSubscription(sqs, sns, config.receiver.snsTopicArn)) {
             Receiver receiver = new Receiver(sqs, queueSubscription.getQueueUrl());
 
-            // ...
-            // Your code here!
-            // ...
+
+            LOG.info("{}", locationData);
+//            locationData.forEach(locationData1 -> {
+//                System.out.println(locationData1.getId() + " " + locationData1.getX() + " " + locationData1.getY());
+//            });
+
+
+            receiver.getMessages();
+            LOG.info(String.valueOf(receiver.getMessages()));
+
         }
     }
 }
