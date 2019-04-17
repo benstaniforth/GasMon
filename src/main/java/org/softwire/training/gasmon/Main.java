@@ -19,7 +19,7 @@ public class Main {
         try {
             run();
         } catch (Throwable e) {
-            LOG.error("Fatal error, terminatin program", e);
+            LOG.error("Fatal error, terminating program", e);
             System.exit(1);
         }
     }
@@ -35,6 +35,7 @@ public class Main {
         AmazonS3 s3 = awsClientFactory.s3();
 
         S3Repository repository = new S3Repository(s3, config.locations.s3Bucket);
+
         try (QueueSubscription queueSubscription = new QueueSubscription(sqs, sns, config.receiver.snsTopicArn)) {
             Receiver receiver = new Receiver(sqs, queueSubscription.getQueueUrl());
 
