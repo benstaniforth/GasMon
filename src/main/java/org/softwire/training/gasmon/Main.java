@@ -12,6 +12,7 @@ import org.softwire.training.gasmon.model.LocationData;
 import org.softwire.training.gasmon.receiver.QueueSubscription;
 import org.softwire.training.gasmon.receiver.Receiver;
 import org.softwire.training.gasmon.repository.S3Repository;
+import org.softwire.training.gasmon.services.LocationsService;
 import org.softwire.training.gasmon.services.ReadJSONFile;
 
 import java.io.IOException;
@@ -42,6 +43,7 @@ public class Main {
 
         S3Repository repository = new S3Repository(s3, config.locations.s3Bucket);
 
+        LocationsService locationsService = new LocationsService(repository, config.locations.s3Key);
         List<LocationData> locationData;
 
         locationData = ReadJSONFile.getLocationDataFromJSON(repository, config);
