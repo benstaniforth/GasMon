@@ -12,10 +12,16 @@ import org.softwire.training.gasmon.model.LocationData;
 import org.softwire.training.gasmon.receiver.QueueSubscription;
 import org.softwire.training.gasmon.receiver.Receiver;
 import org.softwire.training.gasmon.repository.S3Repository;
+import org.softwire.training.gasmon.services.EventsServices;
 import org.softwire.training.gasmon.services.LocationsService;
-import org.softwire.training.gasmon.services.ReadJSONFile;
+import org.softwire.training.gasmon.services.Utilities;
 
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Main {
@@ -47,20 +53,49 @@ public class Main {
 
         List<LocationData> locationData = locationsService.getValidLocations();
 
+        // Create a file to output the averages to:
+        File file = new File("AverageLog.txt");
+        file.createNewFile();
+
+        FileWriter writer = new FileWriter(file);
+        writer.write("");
+        writer.close();
+
         try (QueueSubscription queueSubscription = new QueueSubscription(sqs, sns, config.receiver.snsTopicArn)) {
             Receiver receiver = new Receiver(sqs, queueSubscription.getQueueUrl());
             LOG.info("{}", locationData);
 
-            for (int i = 0; i < 10; i++) {
+            List<Event> validEvents = new ArrayList<>();
+            long timeSinceAverageLastCalculated = System.currentTimeMillis();
+            double averageValue = 0.0;
+            LocalTime curTime = LocalTime.now();
+
+            while (curTime.plusMinutes(45).isAfter(LocalTime.now())) {
+
+                long currentTime = System.currentTimeMillis();
                 List<Event> events = receiver.getEvents();
                 for (Event event : events) {
                     if (locationsService.isValidLocation(event.getLocationId())) {
-                        LOG.info("{}", event);
+                        if (!EventsServices.isDuplicateEvent(event.getEventId(), validEvents)) {
+                            validEvents.add(event);
+                            LOG.info("Added : {}", event);
+                        } else {
+                            LOG.info("Skipped duplicate event : {}", event);
+                        }
                     } else {
                         LOG.info("Skipped event. Unknown location");
                     }
                 }
+
+                if ((timeSinceAverageLastCalculated + 60_000) < System.currentTimeMillis()) {
+                    averageValue = EventsServices.averageEventValues(currentTime, validEvents);
+                    LOG.info("Current Time: " + LocalTime.now() + ", Average for 5-6 minutes before is: " + averageValue);
+                    timeSinceAverageLastCalculated = System.currentTimeMillis();
+                    Utilities.writeToFile(String.valueOf(averageValue), file);
+                }
             }
+
+
         }
     }
 }
