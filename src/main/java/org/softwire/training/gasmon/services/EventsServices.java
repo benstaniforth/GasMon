@@ -2,6 +2,7 @@ package org.softwire.training.gasmon.services;
 
 import org.softwire.training.gasmon.model.Event;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -42,9 +43,9 @@ public class EventsServices {
         HashMap<String, List<Event>> eventsHash = new HashMap<>();
 
         for (Event event : validEvents) {
-            eventsHash.put(event.getLocationId(), );
+            eventsHash.computeIfAbsent(event.getLocationId(), k -> new ArrayList<>()).add(event);
         }
-
+        return eventsHash;
     }
 
 }
